@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, make_response
-from flask_restplus import Api, Resource, fields
+from flask_restx import Api, Resource, fields
 import joblib
 
 import numpy as np
@@ -44,16 +44,20 @@ flask_app = Flask(__name__)
 
 app = Api(app = flask_app, 
 		  version = "1.0", 
-		  title = "ML React App", 
-		  description = "Predict results using a trained model")
+		  title = "StackOverflow tag predictor", 
+		  description = "Suggests tags given a StackOverflow posts")
 
 name_space = app.namespace('prediction', description='Prediction APIs')
 
 model = app.model('Prediction params', 
-				  {'soPost': fields.String(required = True, 
-				  							   description="Text Field 1", 
-    					  				 	   help="Text Field 1 cannot be blank")
-    })
+                  {'title': fields.String(required = True, 
+                                           description="StackOverflow post title", 
+                                           help="Text Field 1 cannot be blank"), 
+                   'body': fields.String(required = True, 
+                                            description="StackOverflow post body", 
+                                            help="Text Field 1 cannot be blank")
+                  }
+                 )
 
 with open('supervised_model_maxdf.pkl', 'rb') as f:
     classifier = joblib.load(f)
@@ -75,7 +79,8 @@ class MainClass(Resource):
     def post(self):
         try: 
             formData = request.json
-            data = [val for val in formData.values()]
+#            data = [val for val in formData.values()]
+            data = [formData['title'] + ' ' + formData['body']]
             
             y_proba = classifier.predict_proba(data)
             y_proba = pd.DataFrame(y_proba.transpose().toarray())
@@ -85,7 +90,7 @@ class MainClass(Resource):
             response = jsonify({
 				"statusCode": 200,
 				"status": "Prediction made",
-				"result": "Prediction: " + y_tags_str
+				"result": "Prediction: " + y_tags_str 
 				})
             response.headers.add('Access-Control-Allow-Origin', '*')
             return response

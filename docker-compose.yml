@@ -3,7 +3,7 @@ version: "3"
 services:
 
   flask-app:
-    image: so-tag-predictor
+    image: so-tag-flask
     container_name: so-tag-flask
     environment:
       - discovery.type=single-node

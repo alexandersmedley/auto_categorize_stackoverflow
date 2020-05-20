@@ -34,7 +34,7 @@ class App extends Component {
   handlePredictClick = (event) => {
     const formData = this.state.formData;
     this.setState({ isLoading: true });
-    fetch('http://127.0.0.1:5000/prediction/', 
+    fetch('http://ec2-35-180-115-23.eu-west-3.compute.amazonaws.com:5000/prediction/', 
       {
         headers: {
           'Accept': 'application/json',
@@ -70,12 +70,23 @@ class App extends Component {
           <Form>
             <Form.Row>
               <Form.Group as={Col}>
-                <Form.Label>Post</Form.Label>
+                <Form.Label>Title</Form.Label>
                 <Form.Control 
                   type="text" 
-                  placeholder="Type in your StackOverflow post here ..." 
-                  name="soPost"
-                  value={formData.soPost}
+                  placeholder="StackOverflow post title" 
+                  name="title"
+                  value={formData.title}
+                  onChange={this.handleChange} />
+              </Form.Group>
+            </Form.Row>
+            <Form.Row>
+              <Form.Group as={Col}>
+                <Form.Label>Body</Form.Label>
+                <Form.Control 
+                  type="text" 
+                  placeholder="StackOverflow post body" 
+                  name="body"
+                  value={formData.body}
                   onChange={this.handleChange} />
               </Form.Group>
             </Form.Row>
