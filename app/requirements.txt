@@ -4,6 +4,6 @@ scikit-learn==0.21.3
 scikit-multilearn==0.2.0
 xgboost==0.90
 gensim==3.8.1
-joblib==0.13.2
+joblib==1.2.0
 flask==1.1.1
 flask_restx==0.2.0
